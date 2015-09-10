@@ -1,0 +1,3 @@
+module RooftopRails
+  VERSION = "0.0.1"
+end
