@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem "rooftop-ruby-client", path: "../rooftop-ruby-client"
+
 # Declare your gem's dependencies in rooftop_rails.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.

@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.2.4"
 
-  # s.add_dependency "rooftop-ruby-client"
+  s.add_dependency "rooftop-ruby-client"
 end
