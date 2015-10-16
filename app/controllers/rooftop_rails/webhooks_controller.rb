@@ -1,4 +1,4 @@
-class RooftopRails::WebhooksController < ApplicationController
+class Rooftop::Rails::WebhooksController < ::ApplicationController
   def create
     return render text: "CREATE"
   end
