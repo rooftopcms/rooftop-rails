@@ -1,8 +1,6 @@
 require 'rooftop'
-
-require "rooftop/rails/engine"
-require "rooftop/rails/development_constraint"
-require "rooftop/rails/preview"
+require 'require_all'
+require_rel '.'
 
 module Rooftop
   module Rails
