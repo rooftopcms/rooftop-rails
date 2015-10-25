@@ -1,8 +1,6 @@
 require 'rooftop'
-
-require "rooftop/rails/engine"
-require "rooftop/rails/development_constraint"
-require "rooftop/rails/preview"
+require 'require_all'
+require_rel '.'
 
 module Rooftop
   module Rails
@@ -25,15 +23,19 @@ module Rooftop
                     :authenticate_webhooks,
                     :webhooks_username,
                     :webhooks_password,
-                    :perform_caching,
                     :preview_username,
                     :preview_password,
                     :preview_domain,
-                    :enable_preview_domain
+                    :enable_preview_domain,
+                    :perform_caching,
+                    :cache_store,
+                    :cache_logger
 
       def initialize
         @authenticate_webhooks = true
         @perform_caching = ::Rails.configuration.action_controller.perform_caching
+        @cache_store = ::Rails.cache
+        @cache_logger = ::Rails.logger
       end
     end
   end
