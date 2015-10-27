@@ -28,9 +28,19 @@ Configure Rooftop::Rails in a Rails initializer:
 Rooftop::Rails.configure do |config|
   config.site_name = "yoursite"
   config.api_token = "your token in here"
+  config.perform_caching = false #If you leave this out, Rooftop::Rails will follow whatever you've set in Rails.configuration.action_controller.perform_caching (usually false in development and true in production)
+  config.cache_store = Rails.cache #set to the rails cache store you've configured, by default.
+  config.cache_logger = Rails.logger #set to the rails logger by default. You might want to set to nil in production to avoid cache logging noise.
+  
+  config.ssl_options = {
+    #This is where you configure your ssl options.
+  }
+  
   # Advanced options which you probably won't need
   config.extra_headers = {header: "something", another_header: "something else"} #headers sent with requests for the content
   config.advanced_options = {option: true} # for future use
+      
+  
   # The following settings are only necessary if you're hosting Rooftop yourself.
   config.url = "https://your.rooftop.site" #only necessary for a custom self-hosted Rooftop installation
   config.api_path = "/path/to/api" #only necessary for a custom self-hosted Rooftop installation
@@ -38,7 +48,7 @@ end
 ```
 # Use
 
-## Pulling Rooftop content into your Rails application
+## Including Rooftop content in your model
 This gem builds on the `rooftop-ruby` library so please have a look at that project to understand how to integrate Rooftop into your Ruby models. In essence it's as simple as:
 
 ```
@@ -49,6 +59,15 @@ end
 ```
 
 `YourModel` will now respond to calls like `.first()` to get the first post of type `your_post_type` from Rooftop.
+
+There's lots more in the Rooftop library docs here: https://github.com/rooftopcms/rooftop-ruby
+
+## Caching responses from the Rooftop API
+The API returns cache headers, including etags, for entities. In the `Rooftop` library, the HTTP responses are cached.
+ 
+ By default, `Rooftop::Rails` configures the same cache as you're using in your Rails application, and switches it on or off by following the `Rails.configuration.action_controller.perform_caching` setting from your environment configs. You can always manually override that by setting `perform_caching` manually in your Rooftop::Rails configuration.
+ 
+ 
 
 # Roadmap
 The project is moving fast. Things on our list include:
