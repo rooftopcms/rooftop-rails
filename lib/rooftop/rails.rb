@@ -29,13 +29,15 @@ module Rooftop
                     :enable_preview_domain,
                     :perform_caching,
                     :cache_store,
-                    :cache_logger
+                    :cache_logger,
+                    :ssl_options
 
       def initialize
         @authenticate_webhooks = true
         @perform_caching = ::Rails.configuration.action_controller.perform_caching
         @cache_store = ::Rails.cache
         @cache_logger = ::Rails.logger
+        @ssl_options = {}
       end
     end
   end

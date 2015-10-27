@@ -21,6 +21,7 @@ module Rooftop
           config.perform_caching = Rooftop::Rails.configuration.perform_caching
           config.cache_store = Rooftop::Rails.configuration.cache_store
           config.cache_logger = Rooftop::Rails.configuration.cache_logger
+          config.ssl_options = Rooftop::Rails.configuration.ssl_options
         end
       end
 
