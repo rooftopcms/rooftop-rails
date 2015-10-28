@@ -72,11 +72,11 @@ The API returns cache headers, including etags, for entities. In the `Rooftop` l
 # Roadmap
 The project is moving fast. Things on our list include:
 
-* Webhooks controller: respond to incoming requests by caching the latest content
-* Model and view caching: Rails needs to be able to render content from a local cache.
-* Preview URL: you'll be able to go to preview.your-site.com on your rails site and see draft content from Rooftop.
-* Saving content back to Rooftop: definitely doable.
-* Forms: GravityForms integration is work-in-progress in Rooftop. We'll include a custom renderer for it in Rails, when it's done.
+* Webhooks controller: respond to incoming requests by caching the latest content: https://github.com/rooftopcms/rooftop-rails/issues/4
+* Model and view caching: Rails needs to be able to render content from a local cache: https://github.com/rooftopcms/rooftop-rails/issues/5
+* Preview URL: you'll be able to go to preview.your-site.com on your rails site and see draft content from Rooftop: https://github.com/rooftopcms/rooftop-rails/issues/3
+* Saving content back to Rooftop: definitely doable: https://github.com/rooftopcms/rooftop-cms/issues/7
+* Forms: GravityForms integration is work-in-progress in Rooftop. We'll include a custom renderer for it in Rails, when it's done: https://github.com/rooftopcms/rooftop-rails/issues/6
 
 # Contributing
  Rooftop and its libraries are open-source and we'd love your input.
