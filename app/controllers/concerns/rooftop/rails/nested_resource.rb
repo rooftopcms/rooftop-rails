@@ -31,8 +31,16 @@ module Rooftop
 
           # Set up the dynamically-named find_[resource name]
           define_method "find_#{@resource_name}" do
-            resource = self.class.resource_class.send(:find_by_nested_path, params[:nested_path])
-            instance_variable_set("@#{self.class.resource_name}",resource)
+            respond_to do |format|
+              format.html do
+                resource = self.class.resource_class.send(:find_by_nested_path, params[:nested_path])
+                instance_variable_set("@#{self.class.resource_name}",resource)
+              end
+              format.all do
+                raise ActionController::RoutingError, "Not found"
+              end
+            end
+
           end
           # Set up the dynamically-named validate_[resource name]
           define_method "validate_#{@resource_name}" do
