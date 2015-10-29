@@ -67,7 +67,69 @@ The API returns cache headers, including etags, for entities. In the `Rooftop` l
  
  By default, `Rooftop::Rails` configures the same cache as you're using in your Rails application, and switches it on or off by following the `Rails.configuration.action_controller.perform_caching` setting from your environment configs. You can always manually override that by setting `perform_caching` manually in your Rooftop::Rails configuration.
  
- 
+## Nested resources
+You probably have one (or more) nested post types in your Rooftop setup. The most obvious one is pages, but you might equally well have product categories or something similar.
+  
+There are 2 problems this presents for consuming in Rails:
+
+* You need to find a resource from a `/nested/path/of/slugs` (where `slugs` in this case is the slug of the resource you want).
+* You need to validate that the path you're provided matches the resource. Otherwise the path `/slugs` would equally well work for the resource, while being wrong.
+   
+You also need to be able to generate the path for a resource, so you can build URLs and things.
+
+### Rooftop::Rails::NestedModel
+`Rooftop::Rails::NestedModel` is a _model_ mixin which does the following:
+
+* Defines a class method `find_by_nested_path()` which, when given a path, find an instance by slug if there is one (and raises `Rooftop::RecordNotFound` if there isn't one).
+* Defines an instance method `nested_path()` which returns the nested path to the object you're calling it on.
+
+```
+class Page
+   include Rooftop::Rails::NestedModel
+end
+
+p = Page.find_by_nested_path("/nested/path/of/slugs") # returns the Page which has a slug of 'slugs' in this case.
+
+p.nested_path #returns "/nested/path/of/slugs"
+
+```
+
+### Rooftop::Rails::NestedResource
+This is a _controller_ mixin which does the following:
+
+* Defines a class method on your controller called `nested_rooftop_resource` with which you can define the name of your nested model
+* Adds a dynamically-named `find_[your resource name]` method, to find the model from the path
+* Adds another dynamically-named `validate_[your resource name]` method to validate that the path provided matches the one for the model.
+* Adds a utility method `find_and_validate_[your resource name]` because typing is boring.
+* _mixes Rooftop::Rails::NestedModel into your model_ so you don't have to. Doesn't hurt if you have, though.
+
+A few of important notes:
+
+1. You need to call `find_and_validate_[your resource name]` (or just find) in a before_action
+2. The controller needs to have the path passed to is as `params[:nested_path]`
+3. The only field you can find by is `slug`. This probably makes sense because it's how you'd construct URLs in any case.
+
+```
+# in your routes
+Rails.application.routes.draw do
+    # some route definitions in here, followed by...
+    match "/*nested_path", via: [:get], to: "pages#show" #note that this is a greedy route
+
+# in your controller
+class PagesController < ActionController::Base
+    include Rooftop::Rails::NestedResource
+    nested_rooftop_resource :page #this mixes Rooftop::Rails::NestedModel into your model, and sets up the `find_` and `validate_` methods
+    before_action :find_and_validate_page, only: :show #we only do it for the `show` method because that's where the route points.
+     
+    def show
+        #in here, do your showing stuff; you have access to @page courtesy of the finder method above
+    end
+end
+```
+
+If you make a call to `pages#show` with a slug which is invalid, you get a `Rooftop::ResourceNotFound` error.
+
+If you make a call which ends in a real slug, but the rest of the path isn't right, you get a `Rooftop::Rails::AncestorMismatch` error.
 
 # Roadmap
 The project is moving fast. Things on our list include:
