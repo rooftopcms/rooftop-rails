@@ -30,7 +30,8 @@ module Rooftop
                     :perform_caching,
                     :cache_store,
                     :cache_logger,
-                    :ssl_options
+                    :ssl_options,
+                    :proxy
 
       def initialize
         @authenticate_webhooks = true

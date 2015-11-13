@@ -22,6 +22,7 @@ module Rooftop
           config.cache_store = Rooftop::Rails.configuration.cache_store
           config.cache_logger = Rooftop::Rails.configuration.cache_logger
           config.ssl_options = Rooftop::Rails.configuration.ssl_options
+          config.proxy = Rooftop::Rails.configuration.proxy
         end
       end
 
