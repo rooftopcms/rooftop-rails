@@ -37,7 +37,7 @@ module Rooftop
                 instance_variable_set("@#{self.class.resource_name}",resource)
               end
               format.all do
-                raise ActionController::RoutingError, "Not found"
+                raise ActionController::RoutingError, "Not found: #{request.original_fullpath}"
               end
             end
 
