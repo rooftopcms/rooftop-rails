@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "require_all"
+  s.add_dependency "require_all", "~> 1.3"
   s.add_dependency "rails", "~> 4.2"
-  s.add_dependency "nokogiri"
+  s.add_dependency "nokogiri", "~> 1.6"
 
-  s.add_dependency "rooftop"
+  s.add_dependency "rooftop", "0.0.5"
 end
