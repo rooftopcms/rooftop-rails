@@ -131,6 +131,62 @@ If you make a call to `pages#show` with a slug which is invalid, you get a `Roof
 
 If you make a call which ends in a real slug, but the rest of the path isn't right, you get a `Rooftop::Rails::AncestorMismatch` error.
 
+## Parsing Content - how Rooftop handles links to content
+Because every project has a different URL structure, it's not possible to customise links in content when they come out of the Rooftop API. For example, you might have pages at `/pages/[slug]` in this project, and `/[slug]` in another. Similarly there's no way you could customise the data for custom post types. So we make links to internal content generic, using data attributes.
+
+### An example link
+Say you have a link in some Rooftop content pointing to a custom post type called 'Product Plans', and an entry with a slug called 'enterprise'. The default url structure for this in WordPress would be `/archives/product_plans/enterprise`. Not very useful for your Rails app:
+
+```
+<a href="/archives/product_plans/enterprise" class="something">A link to our Enterprise plan</a>
+```
+  
+To fix this, we parse the URLs before the content is presented to the API, so that you get a link in your content like this:
+ 
+```
+<a data-rooftop-link-type="product_plan" data-rooftop-link-id="54" data-rooftop-link-slug="enterprise" class="something">A link to our Enterprise plan</a>
+```
+
+### How to get links pointing to the right place in your Rails app
+That link above, with its data attributes, is nice and flexible, but we can do better. We can introspect your routes and add an `href` attribute pointing to the right place. When you include the `Rooftop::Rails` gem in your project, you get a helper you can use like this:
+
+```
+# In your Page model
+class Page
+    include Rooftop::Page
+end
+
+# In your routes
+resources :product_plans
+# or even
+resource :product_plans, path: "our_awesome_products"
+
+# In your controller
+@page = Page.first #pretending here that the Page returned is the one with the link in its content
+
+# In your view (or elsewhere)
+<div class="some-container-for-your-content>
+    <%= parse_content(@page.fields.content)%>
+</div>
+```
+
+You will see that your content now has links which point to the correct place.
+
+### The RouteResolver class
+To make this work, this gem includes a class called Rooftop::Rails::RouteResolver which takes a resource type (:product_plan in this case) and an optional id. It returns the result from url_for, having looked at the routes you've set up.
+
+### Adding custom routes for parsing
+If you want to add a custom route for parsing content - say, for example, a non-restful route, or maybe even a route to another application altogether, you can configure this as follows:
+
+```
+# in your initializer
+Rooftop::Rails.configure do |config|
+    # your other config options in here
+    config.resource_route_mapping = {
+        product_plan: ->(plan) {} # do something in this lambda which, when called, returns the url you want.
+    }
+```
+  
 # Roadmap
 The project is moving fast. Things on our list include:
 
