@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "require_all"
   s.add_dependency "rails", "~> 4.2"
+  s.add_dependency "nokogiri"
 
   s.add_dependency "rooftop"
 end

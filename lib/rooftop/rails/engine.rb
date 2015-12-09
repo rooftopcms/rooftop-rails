@@ -31,6 +31,12 @@ module Rooftop
           include Rooftop::Rails::Preview
         end
       end
+
+      initializer "add_helpers" do
+        ActiveSupport.on_load(:action_view) do
+          include Rooftop::Rails::ContentHelper
+        end
+      end
     end
   end
 end
