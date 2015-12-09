@@ -31,7 +31,8 @@ module Rooftop
                     :cache_store,
                     :cache_logger,
                     :ssl_options,
-                    :proxy
+                    :proxy,
+                    :resource_route_map
 
       def initialize
         @authenticate_webhooks = true
@@ -39,6 +40,7 @@ module Rooftop
         @cache_store = ::Rails.cache
         @cache_logger = ::Rails.logger
         @ssl_options = {}
+        @resource_route_map = {}
       end
     end
   end
