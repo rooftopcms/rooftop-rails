@@ -28,7 +28,7 @@ module Rooftop
       end
 
       def parse_content(content)
-        parse_links(content)
+        parse_links(content).html_safe
       end
     end
   end
