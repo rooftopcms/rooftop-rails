@@ -24,7 +24,7 @@ module Rooftop
           slug = "#{options[:prefix]}#{path}".gsub(/^\//, '').split(delimiter).last
           entity = where(slug: slug).first
           if entity.nil?
-            raise Rooftop::RecordNotFound, "Couldn't find #{self} with slug #{slug}"
+            raise Rooftop::RecordNotFoundError, "Couldn't find #{self} with slug #{slug}"
           else
             return entity
           end
