@@ -20,17 +20,21 @@ module Rooftop
 
         # Overload the find() method, with caching. Only pass uncached keys to the super method.
         def find(*ids)
-          ids.uniq!
-          uncached_ids = ids.reject {|i| ::Rails.cache.read("#{cache_key_base}/#{i}").present?}
-          [super(*uncached_ids)].flatten.reject(&:blank?).collect do |object|
-            ::Rails.logger.debug("Caching #{cache_key_base}/#{object.id}")
-            ::Rails.cache.write("#{cache_key_base}/#{object.id}",object)
-          end
-          all_objects = ids.collect do |id|
-            ::Rails.cache.read("#{cache_key_base}/#{id}")
-          end
+          if Rooftop::Rails.configuration.perform_object_caching
+            ids.uniq!
+            uncached_ids = ids.reject {|i| ::Rails.cache.read("#{cache_key_base}/#{i}").present?}
+            [super(*uncached_ids)].flatten.reject(&:blank?).collect do |object|
+              ::Rails.logger.debug("Caching #{cache_key_base}/#{object.id}")
+              ::Rails.cache.write("#{cache_key_base}/#{object.id}",object)
+            end
+            all_objects = ids.collect do |id|
+              ::Rails.cache.read("#{cache_key_base}/#{id}")
+            end
 
-          all_objects.length == 1 ? all_objects.first : all_objects
+            all_objects.length == 1 ? all_objects.first : all_objects
+          else
+            super
+          end
         end
 
       end
