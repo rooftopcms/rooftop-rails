@@ -13,7 +13,7 @@ module Rooftop
         # By adding a call to `nested_rooftop_resource` in your controller class, the following happens:
         # - The resource model you identify has Rooftop::Rails::NestedModel mixed into it
         # - Methods for finding a model object and validating that the path is correct are added
-        # For example:
+        # @example
         #     class PagesController
         #       include Rooftop::Rails::NestedResource
         #       nested_rooftop_resource :page
