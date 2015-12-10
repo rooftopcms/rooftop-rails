@@ -18,7 +18,7 @@ module Rooftop
           config.advanced_options = Rooftop::Rails.configuration.advanced_options
           config.api_path = Rooftop::Rails.configuration.api_path
           config.url = Rooftop::Rails.configuration.url || "https://#{config.site_name}.rooftopcms.io"
-          config.perform_caching = Rooftop::Rails.configuration.perform_caching
+          config.perform_caching = Rooftop::Rails.configuration.perform_http_response_caching
           config.cache_store = Rooftop::Rails.configuration.cache_store
           config.cache_logger = Rooftop::Rails.configuration.cache_logger
           config.ssl_options = Rooftop::Rails.configuration.ssl_options
@@ -35,6 +35,13 @@ module Rooftop
       initializer "add_helpers" do
         ActiveSupport.on_load(:action_view) do
           include Rooftop::Rails::ContentHelper
+        end
+      end
+
+      initializer "add_caching_to_rooftop_models" do
+        ::Rails.application.eager_load!
+        Rooftop::Base.included_classes.each do |klass|
+          klass.send(:include, Rooftop::Rails::ObjectCache)
         end
       end
     end
