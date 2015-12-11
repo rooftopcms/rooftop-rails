@@ -18,7 +18,7 @@ module Rooftop
           "rooftop/#{self.to_s.underscore}"
         end
 
-        # Overload the find() method, with caching. Only pass uncached keys to the super method.
+        # Redeclare the find() method, with caching. Only pass uncached keys to the super method.
         def find(*ids)
           if Rooftop::Rails.configuration.perform_object_caching
             ids.uniq!
