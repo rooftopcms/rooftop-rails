@@ -38,6 +38,7 @@ module Rooftop
       def initialize
         @authenticate_webhooks = true
         @perform_http_response_caching = ::Rails.configuration.action_controller.perform_caching
+        @perform_object_caching = ::Rails.configuration.action_controller.perform_caching
         @cache_store = ::Rails.cache
         @cache_logger = ::Rails.logger
         @ssl_options = {}

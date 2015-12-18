@@ -186,11 +186,46 @@ Rooftop::Rails.configure do |config|
         product_plan: ->(plan) {} # do something in this lambda which, when called, returns the url you want.
     }
 ```
+
+## routes.rb
+Mount the Rooftop::Rails engine at your preferred url:
+
+```
+mount Rooftop::Rails => '/rooftop' #feel free to choose a different endpoint name
+```
+
+This will give you 2 routes:
+
+`/rooftop/webhooks` - the URL for contentful to post back to.
+`/rooftop/webhooks/debug` - a development-only URL to check you have mounted the engine properly :-)
+
+## The webhooks controller - how to receive webhook calls
+The webhooks controller uses [Rails instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html) to notify other code that something has changed.
+ 
+By default, object caches (including collections called with `.where()` or `.find()` are cleared, but you can hook into the notification to do whatever you fancy.
+
+In an initializer, do this:
+
+```
+ActiveSupport::Notifications.subscribe(/rooftop.*/) do |name, start, finish, id, payload|
+# payload will be a hash, which looks like this:
+#{"id"=>"10", "blog_id"=>"115", "sub_domain"=>"your_subdomain", "type"=>"your_post_type", "status"=>"publish"}
+  
+  #if you want to access the class associated with a custom post type, you can use this:
+  if Rooftop.configuration.post_type_mapping[content_type].present?
+    klass = Rooftop.configuration.post_type_mapping[content_type]
+  else
+    klass = content_type.classify.constantize
+  end
+  
+  #then do whatever you want with klass here.
+end
+```
+
   
 # Roadmap
 The project is moving fast. Things on our list include:
 
-* Webhooks controller: respond to incoming requests by caching the latest content: https://github.com/rooftopcms/rooftop-rails/issues/4
 * Model and view caching: Rails needs to be able to render content from a local cache: https://github.com/rooftopcms/rooftop-rails/issues/5
 * Preview URL: you'll be able to go to preview.your-site.com on your rails site and see draft content from Rooftop: https://github.com/rooftopcms/rooftop-rails/issues/3
 * Saving content back to Rooftop: definitely doable: https://github.com/rooftopcms/rooftop-cms/issues/7

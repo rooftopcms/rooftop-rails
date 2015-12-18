@@ -1,4 +1,4 @@
-Rails.application.routes.draw do
+Rooftop::Rails::Engine.routes.draw do
   resources :webhooks, only: [:create], defaults: { format: :json } do
     collection do
       scope constraints: Rooftop::Rails::DevelopmentConstraint do
