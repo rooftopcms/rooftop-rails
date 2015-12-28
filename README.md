@@ -187,6 +187,23 @@ Rooftop::Rails.configure do |config|
     }
 ```
 
+## Menus
+Rooftop menus are abstracted into a `Rooftop::Menus::Menu` class, which contains a collection of `Rooftop::Menus::Item`.
+
+There's a helper in this gem which resolves the routes to your resources from a menu item (without having to call the object to which the menu refers). Use as follows:
+
+```
+# In a Rails console session; if you're in the view you won't need to prefix the helper
+# method call with 'helper.'
+menu = Rooftop::Menus::Menu.find(2) # the menu, found by ID
+
+item = menu.items.first #a menu item
+
+helper.path_for_menu_item(item) #returns a string path to the resource to which this menu item refers, or nil if it can't resolve it.
+```
+
+You can use this to build up your navigation in a view. We could add something to generate a hash of menu items but that seems like extra work for no benefit when you can iterate over them in the view.
+
 ## routes.rb
 Mount the Rooftop::Rails engine at your preferred url:
 
@@ -220,13 +237,11 @@ ActiveSupport::Notifications.subscribe(/rooftop.*/) do |name, start, finish, id,
   
   #then do whatever you want with klass here.
 end
-```
-
+```  
   
 # Roadmap
 The project is moving fast. Things on our list include:
 
-* Model and view caching: Rails needs to be able to render content from a local cache: https://github.com/rooftopcms/rooftop-rails/issues/5
 * Preview URL: you'll be able to go to preview.your-site.com on your rails site and see draft content from Rooftop: https://github.com/rooftopcms/rooftop-rails/issues/3
 * Saving content back to Rooftop: definitely doable: https://github.com/rooftopcms/rooftop-cms/issues/7
 * Forms: GravityForms integration is work-in-progress in Rooftop. We'll include a custom renderer for it in Rails, when it's done: https://github.com/rooftopcms/rooftop-rails/issues/6
