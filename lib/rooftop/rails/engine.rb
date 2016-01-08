@@ -48,13 +48,7 @@ module Rooftop
 
       initializer "clear_caches_on_webhook_notification" do
         ActiveSupport::Notifications.subscribe(/rooftop.*/) do |name, start, finish, id, payload|
-          content_type = payload[:type]
-          if Rooftop.configuration.post_type_mapping[content_type].present?
-            klass = Rooftop.configuration.post_type_mapping[content_type]
-          else
-            klass = content_type.classify.constantize
-          end
-          klass.send(:expire_cache_for, payload[:id])
+          Rooftop::Rails::CacheExpirer.expire(payload)
         end
       end
     end
