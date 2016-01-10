@@ -31,6 +31,7 @@ module Rooftop
                     :perform_object_caching,
                     :cache_store,
                     :cache_logger,
+                    :logger,
                     :ssl_options,
                     :proxy,
                     :resource_route_map
@@ -43,6 +44,7 @@ module Rooftop
         @cache_logger = ::Rails.logger
         @ssl_options = {}
         @resource_route_map = {}
+        @logger = nil
       end
     end
   end
