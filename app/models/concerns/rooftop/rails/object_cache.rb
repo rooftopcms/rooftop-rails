@@ -44,35 +44,37 @@ module Rooftop
         end
 
         def where(args)
-          #Sort the arguments, and any keys which are arrays
-          args = Hash[args.sort.each {|k,v| v.sort! if v.is_a?(Array)}]
-          # Generate a hash for keying the cache of the results
-          args_hash = Digest::MD5.hexdigest(args.to_s)
-          cache_key = "#{cache_key_base}/collection_query/#{args_hash}"
-          # first see if we have a collection which matches the args
-          cached_collection = ::Rails.cache.read(cache_key)
-          # if it's present, then we can return it directly.
-          if cached_collection.present?
-            ::Rails.logger.debug("Returning cached collection for #{cache_key}")
-            return cached_collection
-          else
-            # If not, then we need to call super() to get it from the API
-            collection = super(args)
-            # and write it into the cache
-            ::Rails.cache.write(cache_key,collection)
-            # We also iterate over the collection and cache each object, and cache the argument hash against each object
-            collection.each do |object|
-              # This is a bit funky and circular. We store an array of hashes for queries to which this object belongs.
-              # If the object cache needs to be removed, we can iterate through those hashes and clear the collection caches too.
-              collection_query_hash_key = "#{object.cache_key}/collection_hashes"
-              collection_hashes = ::Rails.cache.read(collection_query_hash_key) || []
-              collection_hashes << args_hash
-              ::Rails.cache.write(collection_query_hash_key, collection_hashes)
-              # this is the object cache - i.e. it'll respond with a cache lookup for Page.find(14) or whatever
-              ::Rails.cache.write(object.cache_key,object)
-              ::Rails.logger.debug("Written cached collection for #{object.cache_key}")
+          if Rooftop::Rails.configuration.perform_object_caching
+            #Sort the arguments, and any keys which are arrays
+            args = Hash[args.sort.each {|k,v| v.sort! if v.is_a?(Array)}]
+            # Generate a hash for keying the cache of the results
+            args_hash = Digest::MD5.hexdigest(args.to_s)
+            cache_key = "#{cache_key_base}/collection_query/#{args_hash}"
+            # first see if we have a collection which matches the args
+            cached_collection = ::Rails.cache.read(cache_key)
+            # if it's present, then we can return it directly.
+            if cached_collection.present?
+              ::Rails.logger.debug("Returning cached collection for #{cache_key}")
+              return cached_collection
+            else
+              # If not, then we need to call super() to get it from the API
+              collection = super(args)
+              # and write it into the cache
+              ::Rails.cache.write(cache_key,collection)
+              # We also iterate over the collection and cache each object, and cache the argument hash against each object
+              collection.each do |object|
+                # This is a bit funky and circular. We store an array of hashes for queries to which this object belongs.
+                # If the object cache needs to be removed, we can iterate through those hashes and clear the collection caches too.
+                collection_query_hash_key = "#{object.cache_key}/collection_hashes"
+                collection_hashes = ::Rails.cache.read(collection_query_hash_key) || []
+                collection_hashes << args_hash
+                ::Rails.cache.write(collection_query_hash_key, collection_hashes)
+                # this is the object cache - i.e. it'll respond with a cache lookup for Page.find(14) or whatever
+                ::Rails.cache.write(object.cache_key,object)
+                ::Rails.logger.debug("Written cached collection for #{object.cache_key}")
+              end
+              collection
             end
-            collection
           end
         end
 
