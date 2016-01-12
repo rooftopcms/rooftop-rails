@@ -8,11 +8,11 @@ module Rooftop::Rails
       helper_method :preview?
     end
     # Check whether the subdomain being presented is the preview domain.
-    # If so, set Rooftop to use the preview API, and request a username / password
+    # If so, set Rooftop to add the preview header
     def check_preview_domain
       # If enable_preview_domain is not enabled, explicitly set use_preview_api false and return
       unless Rooftop::Rails.configuration.enable_preview_domain
-        Rooftop.use_preview_api = false
+        Rooftop.preview = false
         return
       end
 
@@ -24,14 +24,14 @@ module Rooftop::Rails
         end
         # If user is authenticated, we're good to switch to the preview api
         if authenticated
-          Rooftop.use_preview_api = true
+          Rooftop.preview = true
         else
           #otherwise ask for user / pass
           request_http_basic_authentication
         end
       else
         #if the subdomain doesn't match the configured one, explicitly set to false
-        Rooftop.use_preview_api = false
+        Rooftop.preview = false
         return
       end
 
@@ -47,7 +47,7 @@ module Rooftop::Rails
     end
 
     def preview?
-      Rooftop.use_preview_api == true
+      Rooftop.preview == true
     end
   end
 end
