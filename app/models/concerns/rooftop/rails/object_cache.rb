@@ -6,6 +6,12 @@ module Rooftop
         base.extend(ClassMethods)
       end
 
+      def self.prepended(base)
+        class << base
+          prepend ClassMethods
+        end
+      end
+
       # Utility method to get the cache key for the instance.
       def cache_key
         "#{self.class.cache_key_base}/#{self.id}"
@@ -47,6 +53,7 @@ module Rooftop
           cached_collection = ::Rails.cache.read(cache_key)
           # if it's present, then we can return it directly.
           if cached_collection.present?
+            ::Rails.logger.debug("Returning cached collection for #{cache_key}")
             return cached_collection
           else
             # If not, then we need to call super() to get it from the API
@@ -63,6 +70,7 @@ module Rooftop
               ::Rails.cache.write(collection_query_hash_key, collection_hashes)
               # this is the object cache - i.e. it'll respond with a cache lookup for Page.find(14) or whatever
               ::Rails.cache.write(object.cache_key,object)
+              ::Rails.logger.debug("Written cached collection for #{object.cache_key}")
             end
             collection
           end
