@@ -43,7 +43,7 @@ module Rooftop
       initializer "add_caching_to_rooftop_models" do
         ::Rails.application.eager_load!
         Rooftop::Base.included_classes.each do |klass|
-          klass.send(:prepend, Rooftop::Rails::ObjectCache)
+          klass.send(:include, Rooftop::Rails::ObjectCache)
         end
       end
 

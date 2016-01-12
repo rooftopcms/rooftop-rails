@@ -6,12 +6,6 @@ module Rooftop
         base.extend(ClassMethods)
       end
 
-      def self.prepended(base)
-        class << base
-          prepend ClassMethods
-        end
-      end
-
       # Utility method to get the cache key for the instance.
       def cache_key
         "#{self.class.cache_key_base}/#{self.id}"
@@ -75,6 +69,8 @@ module Rooftop
               end
               collection
             end
+          else
+            super
           end
         end
 
