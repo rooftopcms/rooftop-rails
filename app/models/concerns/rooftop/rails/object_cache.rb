@@ -31,6 +31,7 @@ module Rooftop
               ::Rails.cache.read("#{cache_key_base}/#{id}")
             end
 
+            all_objects.each {|o| o.run_callbacks(:find)}
             all_objects.length == 1 ? all_objects.first : all_objects
           else
             super
@@ -49,6 +50,7 @@ module Rooftop
             # if it's present, then we can return it directly.
             if cached_collection.present?
               ::Rails.logger.debug("Returning cached collection for #{cache_key}")
+              cached_collection.each {|o| o.run_callbacks :find}
               return cached_collection
             else
               # If not, then we need to call super() to get it from the API
