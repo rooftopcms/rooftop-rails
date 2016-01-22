@@ -116,6 +116,28 @@ module Rooftop
           hash
         end
       end
+
+      def navigation_tree
+        ancestor_tree = self.class.where(post__in: ancestors.collect(&:id)).reverse
+        root = ancestor_tree.first
+        tree = ::Tree::TreeNode.new(root.slug, root)
+        ancestor_tree[1..-1].each do |child|
+          add_to_tree(child, tree)
+        end
+        tree
+      end
+
+      private
+      def add_to_tree(child, tree)
+        child_node = ::Tree::TreeNode.new(child.slug, child)
+        tree << child_node
+        if child.children.present?
+          child.children.each do |child|
+            add_to_tree(child,child_node)
+          end
+        end
+      end
+
     end
   end
 end

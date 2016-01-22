@@ -1,3 +1,4 @@
+require 'tree'
 require 'rooftop'
 require 'require_all'
 require_rel '.'
