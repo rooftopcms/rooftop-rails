@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", "~> 1.6"
 
   s.add_dependency "rooftop", "0.0.6"
+  s.add_dependency 'rubytree' "0.9.7"
 end
