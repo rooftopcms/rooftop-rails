@@ -120,7 +120,7 @@ module Rooftop
         # A method to expire the relevant caches for a collection of objects or ids
         # @param args [Array] of either objects which respond to `.id`, or ids themselves
         def expire_cache_for(*args)
-          args = args.collect {|a| a.respond_to?(:id) ? a.id : a}
+          args = args.collect {|a| a.respond_to?(:id) ? a.id : a}.flatten
           # the caches we need to clear are:
           # - the object cache
           # - any collection caches which included this object
