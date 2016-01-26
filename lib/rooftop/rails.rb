@@ -34,7 +34,8 @@ module Rooftop
                     :logger,
                     :ssl_options,
                     :proxy,
-                    :resource_route_map
+                    :resource_route_map,
+                    :post_type_mapping
 
       def initialize
         @authenticate_webhooks = true

@@ -24,6 +24,7 @@ module Rooftop
           config.ssl_options = Rooftop::Rails.configuration.ssl_options
           config.proxy = Rooftop::Rails.configuration.proxy
           config.logger = Rooftop::Rails.configuration.logger
+          config.post_type_mapping = Rooftop::Rails.configuration.post_type_mapping
         end
       end
 
