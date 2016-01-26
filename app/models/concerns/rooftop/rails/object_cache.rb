@@ -78,7 +78,7 @@ module Rooftop
 
         alias_method :find_by, :where
 
-        def all(args)
+        def all(args = {})
           #TODO this is identical to where, above, but the super() is different. Refactor out to DRY
           if Rooftop::Rails.configuration.perform_object_caching
             #Sort the arguments, and any keys which are arrays
