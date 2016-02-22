@@ -24,6 +24,10 @@ module Rooftop
         end
       end
 
+      def path_matches?(path)
+        request.url =~ %r{#{path}}
+      end
+
 
     end
   end
