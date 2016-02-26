@@ -40,8 +40,11 @@ module Rooftop
 
         def where(args)
           if Rooftop::Rails.configuration.perform_object_caching
-            #Sort the arguments, and any keys which are arrays
-            args = Hash[args.sort.each {|k,v| v.sort! if v.is_a?(Array)}]
+            # Sort the arguments - reduces the number of different argument hashes.
+            # Note that 2 different arg hashes might actually be the same, with child arrays
+            # in a different order. But we won't mess with the order of the child arrays
+            # because sometimes that's important.
+            args = Hash[args.sort]
             # Generate a hash for keying the cache of the results
             args_hash = Digest::MD5.hexdigest(args.to_s)
             cache_key = "#{cache_key_base}/collection_query/#{args_hash}"
@@ -82,7 +85,7 @@ module Rooftop
           #TODO this is identical to where, above, but the super() is different. Refactor out to DRY
           if Rooftop::Rails.configuration.perform_object_caching
             #Sort the arguments, and any keys which are arrays
-            args = Hash[args.sort.each {|k,v| v.sort! if v.is_a?(Array)}]
+            args = Hash[args.sort]
             # Generate a hash for keying the cache of the results
             args_hash = Digest::MD5.hexdigest(args.to_s)
             cache_key = "#{cache_key_base}/collection_query/#{args_hash}"
