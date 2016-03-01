@@ -136,12 +136,8 @@ module Rooftop
             [collection_keys + [object_cache_key]].flatten.each do |key|
               ::Rails.cache.delete(key)
             end
-
           end
-
-
         end
-
       end
     end
   end
