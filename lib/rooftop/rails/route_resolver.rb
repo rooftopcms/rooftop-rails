@@ -20,7 +20,8 @@ module Rooftop
         else
           begin
             route_info = ::Rails.application.routes.named_routes[resource_key].defaults
-            route_info.reverse_merge!(id: @id) unless @id.nil?
+            # once you've called the routes once, you'll have an id. We don't want the previously called one, and in the case of not passing an ID, we want the index method instead of the show method
+            route_info.merge!(id: @id) unless @id.nil?
             ::Rails.application.routes.url_helpers.url_for(route_info.merge(only_path: true))
           rescue
             nil
