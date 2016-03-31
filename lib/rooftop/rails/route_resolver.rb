@@ -12,17 +12,21 @@ module Rooftop
         @id = id
       end
 
-      def resolve
+      def resolve(params={})
         route_config = Rooftop::Rails.configuration.resource_route_map
         resource_key = @id.nil? ? @type.to_s.pluralize.to_sym : @type
         if route_config[resource_key]
-          return route_config[resource_key].try(:call,@id)
+          if route_config[resource_key].arity == 1
+            return route_config[resource_key].try(:call,@id)
+          elsif route_config[resource_key].arity == 2
+            return route_config[resource_key].try(:call,@id, params)
+          end
         else
           begin
             route_info = ::Rails.application.routes.named_routes[resource_key].defaults
             # once you've called the routes once, you'll have an id. We don't want the previously called one, and in the case of not passing an ID, we want the index method instead of the show method
             route_info.merge!(id: @id) unless @id.nil?
-            ::Rails.application.routes.url_helpers.url_for(route_info.merge(only_path: true))
+            ::Rails.application.routes.url_helpers.url_for(route_info.merge(only_path: true, params: params))
           rescue
             nil
           end
