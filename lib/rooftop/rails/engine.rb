@@ -11,7 +11,7 @@ module Rooftop
       end
 
       initializer "configure_rooftop", before: :add_entry_mappings do
-        if Rooftop::Rails.configuration.api_token.present? && Rooftop::Rails.configuration.url.present?
+        if Rooftop::Rails.configuration.api_token.present?
           Rooftop.configure do |config|
             config.api_token = Rooftop::Rails.configuration.api_token
             config.site_name = Rooftop::Rails.configuration.site_name
