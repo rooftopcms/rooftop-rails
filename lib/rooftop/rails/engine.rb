@@ -11,20 +11,22 @@ module Rooftop
       end
 
       initializer "configure_rooftop", before: :add_entry_mappings do
-        Rooftop.configure do |config|
-          config.api_token = Rooftop::Rails.configuration.api_token
-          config.site_name = Rooftop::Rails.configuration.site_name
-          config.extra_headers = Rooftop::Rails.configuration.extra_headers
-          config.advanced_options = Rooftop::Rails.configuration.advanced_options
-          config.api_path = Rooftop::Rails.configuration.api_path
-          config.url = Rooftop::Rails.configuration.url || "https://#{config.site_name}.rooftopcms.io"
-          config.perform_caching = Rooftop::Rails.configuration.perform_http_response_caching
-          config.cache_store = Rooftop::Rails.configuration.cache_store
-          config.cache_logger = Rooftop::Rails.configuration.cache_logger
-          config.ssl_options = Rooftop::Rails.configuration.ssl_options
-          config.proxy = Rooftop::Rails.configuration.proxy
-          config.logger = Rooftop::Rails.configuration.logger
-          config.post_type_mapping = Rooftop::Rails.configuration.post_type_mapping
+        if Rooftop::Rails.configuration.api_token.present? && Rooftop::Rails.configuration.url.present?
+          Rooftop.configure do |config|
+            config.api_token = Rooftop::Rails.configuration.api_token
+            config.site_name = Rooftop::Rails.configuration.site_name
+            config.extra_headers = Rooftop::Rails.configuration.extra_headers
+            config.advanced_options = Rooftop::Rails.configuration.advanced_options
+            config.api_path = Rooftop::Rails.configuration.api_path
+            config.url = Rooftop::Rails.configuration.url || "https://#{config.site_name}.rooftopcms.io"
+            config.perform_caching = Rooftop::Rails.configuration.perform_http_response_caching
+            config.cache_store = Rooftop::Rails.configuration.cache_store
+            config.cache_logger = Rooftop::Rails.configuration.cache_logger
+            config.ssl_options = Rooftop::Rails.configuration.ssl_options
+            config.proxy = Rooftop::Rails.configuration.proxy
+            config.logger = Rooftop::Rails.configuration.logger
+            config.post_type_mapping = Rooftop::Rails.configuration.post_type_mapping
+          end
         end
       end
 
