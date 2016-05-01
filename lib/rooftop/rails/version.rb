@@ -1,5 +1,5 @@
 module Rooftop
   module Rails
-    VERSION = "0.0.5.3"
+    VERSION = "0.0.6"
   end
 end
