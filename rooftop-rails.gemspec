@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 4.2"
   s.add_dependency "nokogiri", "~> 1.6"
 
-  s.add_dependency "rooftop", "0.0.7.4"
+  s.add_dependency "rooftop", "~> 0.0.7.4"
 end
