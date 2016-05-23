@@ -1,2 +1,0 @@
-module RooftopRails::WebhooksHelper
-end
