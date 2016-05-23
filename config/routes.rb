@@ -6,4 +6,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :preview, only: [:create], defaults: { format: :json }
 end
