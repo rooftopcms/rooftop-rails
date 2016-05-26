@@ -22,7 +22,8 @@ module Rooftop
           path = CGI::unescape(path) if options[:unescape]
           delimiter = options[:delimiter]
           slug = "#{options[:prefix]}#{path}".gsub(/^\//, '').split(delimiter).last
-          entity = where(slug: slug, per_page: 1).first
+          entities = where(slug: slug)
+          entity = entities.to_a.find {|e| e.nested_path == path}
           if entity.nil?
             raise Rooftop::RecordNotFoundError, "Couldn't find #{self} with slug #{slug}"
           else
