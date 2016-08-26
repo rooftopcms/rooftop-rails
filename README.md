@@ -175,16 +175,39 @@ You will see that your content now has links which point to the correct place.
 ### The RouteResolver class
 To make this work, this gem includes a class called Rooftop::Rails::RouteResolver which takes a resource type (:product_plan in this case) and an optional id. It returns the result from url_for, having looked at the routes you've set up.
 
+### How to resolve a route
+Given a post type and optionally an ID, here's how you resolve the route:
+
+```
+# In your routes, you have a restful route like this:
+resources :posts, path: "blog" #resolves to /blog, /blog/1 etc.
+
+#here's how you'd get the route, given the following 
+post_type = :post
+id = 1
+
+# This would inspect the routes and return /blog/1?some_param=foo
+Rooftop::Rails::RouteResolver.new(post_type, id).resolve(some_param: "foo")
+```
+
 ### Adding custom routes for parsing
 If you want to add a custom route for parsing content - say, for example, a non-restful route, or maybe even a route to another application altogether, you can configure this as follows:
 
 ```
-# in your initializer
+# In your routes (we use this all the time for pages in Rooftop)
+# note that given a page and an ID, we can't inspect the route directly because it's not declared as a resource
+match "/*nested_path", via: [:get], to: "pages#show", as: :page
+
+# in your initializer, specify a lambda which returns the path you want. If the path should accept params, pass that as a second parameter.
 Rooftop::Rails.configure do |config|
     # your other config options in here
-    config.resource_route_mapping = {
-        product_plan: ->(plan) {} # do something in this lambda which, when called, returns the url you want.
+    config.resource_route_map = {
+      page: ->(path,params) {Rails.application.routes.url_helpers.page_path(path,params)}
     }
+end    
+
+# now you can call the route resolver in the same way to return the right route
+Rooftop::Rails::RouteResolver.new(:page, "/some/path/to/page").resolve(some_param: "foo") #returns /some/path/to/page?some_param=foo   
 ```
 
 ## Menus
