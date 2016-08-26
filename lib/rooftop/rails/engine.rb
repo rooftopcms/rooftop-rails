@@ -50,6 +50,13 @@ module Rooftop
         end
       end
 
+      initializer "add_preview_to_rooftop_models" do
+        ::Rails.application.eager_load!
+        Rooftop::Base.included_classes.each do |klass|
+          klass.send(:include, Rooftop::Rails::PreviewModel)
+        end
+      end
+
       initializer "clear_caches_on_webhook_notification" do
         ActiveSupport::Notifications.subscribe(/rooftop.*/) do |name, start, finish, id, payload|
           Rooftop::Rails::CacheExpirer.expire(payload)

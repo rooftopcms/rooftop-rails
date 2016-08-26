@@ -4,7 +4,12 @@ module Rooftop
     module Preview
 
       def self.included(base)
-        base.send(:before_action, -> {Rooftop.include_drafts = true if preview?})
+        base.send(:before_action, -> {
+          if preview?
+            Rooftop.include_drafts = true
+          end
+
+        })
       end
 
       def preview?

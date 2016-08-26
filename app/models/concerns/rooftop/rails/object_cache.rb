@@ -11,6 +11,12 @@ module Rooftop
         "#{self.class.cache_key_base}/#{self.id}"
       end
 
+      def expire_cache!
+        self.class.send(:expire_cache_for, self)
+      end
+
+      alias_method :expire!, :expire_cache!
+
       module ClassMethods
 
         # Base of the cache key for this class.

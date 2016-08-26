@@ -3,6 +3,8 @@ class Rooftop::Rails::PreviewController < ActionController::Base
 
   #this is where we receive a message from Rooftop via a POST
   def create
+    raise Rooftop::Content::PreviewKeyMissingError, "You need to POST a preview key" unless params[:preview_key].present?
+    session.delete(:preview)
     # Rooftop will POST data to this endpoint
     Rooftop.include_drafts = true
 
