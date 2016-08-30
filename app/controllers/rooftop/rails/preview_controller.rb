@@ -16,7 +16,12 @@ class Rooftop::Rails::PreviewController < ActionController::Base
     item = Rooftop::Rails::PostTypeResolver.new(params[:post_type]).resolve.find(params[:id])
     slug = item.respond_to?(:nested_path) ? item.nested_path : item.slug
     if item.preview_key_matches?(params[:preview_key])
-      redirect_to Rooftop::Rails::RouteResolver.new(params[:post_type].to_sym, slug).resolve(preview: session[:preview][:secret])
+      redirect_path = Rooftop::Rails::RouteResolver.new(params[:post_type].to_sym, slug).resolve(preview: session[:preview][:secret])
+      if redirect_path.nil?
+        raise ActionController::RoutingError, "Couldn't find a route to preview this post type"
+      else
+        redirect_to redirect_path
+      end
     else
       raise Rooftop::Content::PreviewKeyMismatchError, "The preview key received doesn't match the key in Rooftop"
     end
