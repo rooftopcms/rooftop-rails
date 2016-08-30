@@ -23,12 +23,7 @@ module Rooftop
                     :authenticate_webhooks,
                     :webhooks_username,
                     :webhooks_password,
-                    :preview_username,
-                    :preview_password,
-                    :preview_domain,
-                    :enable_preview_domain,
                     :perform_http_response_caching,
-                    :perform_object_caching,
                     :cache_store,
                     :cache_logger,
                     :logger,
@@ -37,10 +32,22 @@ module Rooftop
                     :resource_route_map,
                     :post_type_mapping
 
+      def perform_object_caching=(perform_caching)
+        if perform_caching.is_a?(Proc)
+          @perform_object_caching = perform_caching
+        else
+          @perform_object_caching = ->{perform_caching}
+        end
+      end
+
+      def perform_object_caching
+        @perform_object_caching.call
+      end
+
       def initialize
         @authenticate_webhooks = true
         @perform_http_response_caching = ::Rails.configuration.action_controller.perform_caching
-        @perform_object_caching = ::Rails.configuration.action_controller.perform_caching
+        @perform_object_caching = ->{::Rails.configuration.action_controller.perform_caching}
         @cache_store = ::Rails.cache
         @cache_logger = ::Rails.logger
         @ssl_options = {}
