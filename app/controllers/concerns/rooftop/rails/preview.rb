@@ -7,6 +7,8 @@ module Rooftop
         base.send(:before_action, -> {
           if preview?
             Rooftop.include_drafts = true
+          else
+            Rooftop.include_drafts = false
           end
 
         })
