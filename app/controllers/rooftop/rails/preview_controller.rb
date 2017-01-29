@@ -1,4 +1,4 @@
-class Rooftop::Rails::PreviewController < ActionController::Base
+class Rooftop::Rails::PreviewController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:create]
 
   #this is where we receive a message from Rooftop via a POST
