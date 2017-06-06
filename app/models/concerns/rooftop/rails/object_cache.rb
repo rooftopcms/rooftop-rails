@@ -12,7 +12,7 @@ module Rooftop
       end
 
       def expire_cache!
-        self.class.send(:expire_cache_for, self)
+        self.class.send(:expire_cache_for, self.id)
       end
 
       alias_method :expire!, :expire_cache!
