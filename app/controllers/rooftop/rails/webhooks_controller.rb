@@ -19,8 +19,12 @@ class Rooftop::Rails::WebhooksController < ApplicationController
     # implement your own and subscribe in an initializer.
     ActiveSupport::Notifications.instrument("rooftop.#{update_type}", params)
 
-    #must return an ok
-    render nothing: true
+    #must return an ok - check Rails version to determine whether to return nothing or head response.
+    if Rails.version =~ /^4/
+      render nothing: true
+    else
+      head :ok
+    end
   end
 
   def debug
