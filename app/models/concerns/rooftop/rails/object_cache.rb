@@ -63,7 +63,7 @@ module Rooftop
               return cached_collection
             else
               # If not, then we need to call super() to get it from the API
-              collection = super(args)
+              collection = super(args).to_a
               # and write it into the cache
               ::Rails.cache.write(cache_key,collection)
               # We also iterate over the collection and cache each object, and cache the argument hash against each object
@@ -104,7 +104,7 @@ module Rooftop
               return cached_collection
             else
               # If not, then we need to call super() to get it from the API
-              collection = super
+              collection = super.to_a
               # and write it into the cache
               ::Rails.cache.write(cache_key,collection)
               # We also iterate over the collection and cache each object, and cache the argument hash against each object
