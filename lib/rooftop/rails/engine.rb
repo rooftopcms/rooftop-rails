@@ -44,14 +44,15 @@ module Rooftop
       end
 
       initializer "add_caching_to_rooftop_models" do
-        ::Rails.application.eager_load!
-        Her::Model::Relation.prepend(Rooftop::Queries)
-        Her::Model::Relation.prepend(Rooftop::Rails::RelationCache)
-        Rooftop::Base.included_classes.each do |klass|
-          klass.send(:include, Rooftop::Rails::ObjectCache)
+        if Rails.version.split(".").first.to_i < 5
+          ActionDispatch::Reloader.to_prepare do
+            Her::Model::Relation.prepend(Rooftop::Rails::RelationCache)
+          end
+        else
+          ActionSupport::Reloader.to_prepare do
+            Her::Model::Relation.prepend(Rooftop::Rails::RelationCache)
+          end
         end
-
-
       end
 
       initializer "add_preview_to_rooftop_models" do
