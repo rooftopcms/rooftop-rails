@@ -6,7 +6,6 @@ module Rooftop
       #
 
       def fetch
-        puts "fetch called in Rooftop::Rails::RelationCache"
         if Rooftop::Rails.configuration.perform_object_caching
           # Sort the arguments - reduces the number of different argument hashes.
           # Note that 2 different arg hashes might actually be the same, with child arrays
