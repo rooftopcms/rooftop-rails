@@ -28,7 +28,7 @@ module Rooftop
 
         # Base of the cache key for this class.
         def cache_key_base
-          "rooftop/#{self.to_s.underscore}"
+          "rooftop/#{Rooftop::Rails::VERSION}/#{self.to_s.underscore}"
         end
 
         # Redeclare the find() method, with caching. Only pass uncached keys to the super method.

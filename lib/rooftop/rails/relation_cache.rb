@@ -6,7 +6,7 @@ module Rooftop
       #
 
       def fetch
-        if Rooftop::Rails.configuration.perform_object_caching
+        if Rooftop::Rails.configuration.perform_object_caching && @parent.ancestors.include?(Rooftop::Base)
           # Sort the arguments - reduces the number of different argument hashes.
           # Note that 2 different arg hashes might actually be the same, with child arrays
           # in a different order. But we won't mess with the order of the child arrays
