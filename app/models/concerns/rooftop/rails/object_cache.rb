@@ -67,8 +67,8 @@ module Rooftop
               object_collections.each do |hash|
                 ::Rails.cache.delete("#{cache_key_base}/collection_query/#{hash}")
               end
-              # by implication, the cached object should also be present; clear that too
-              ::Rails.cache.delete(object_cache_key)
+              # by implication, the cached object should also be present; clear that too, along with any of its child keys
+              ::Rails.cache.delete("#{object_cache_key}*")
             else
               # the object isn't in any collections; unfortunately we can't be sure whether this is because the object is old
               # and uncached, or new and therefore needs to be in collections which currently exist for this class.
